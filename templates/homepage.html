@@ -1,0 +1,372 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>Facebook</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+	<link href="{% static 'css/facebook.css' %}" rel="stylesheet">
+	<link href="{% static 'fontawesome/css/all.css' %}" rel="stylesheet">
+</head>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+
+	#side_nav {
+		height: 100vh;
+		width: 100%;
+		background: orange;
+	}
+
+	.like_button {
+		font-size: 20px;
+		cursor: pointer;
+	}
+
+	.blog__container {
+		display: flex;
+		justify-content: space-evenly;
+	}
+
+	.sidebar {
+		height: 100vh;
+		overflow-y: scroll;
+	}
+
+	.post_section {
+		height: 100vh;
+		background: #fff;
+		overflow-y: scroll;
+	}
+
+	.freinds_container {}
+
+	.stories_container {
+		height: 270px;
+	}
+
+	.story_card {
+		height: 200px;
+		position: relative;
+		width: 150px;
+		border-radius: 10px;
+	}
+
+	.story_card img {
+		height: 200px;
+		border-radius: 10px;
+		cursor: pointer;
+	}
+
+	.image_round {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	.image_round img {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+	}
+
+	.add_icon {
+		position: absolute;
+		top: 50%;
+		width: 30px;
+		height: 30px;
+		color: white;
+		left: 40%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+	}
+
+	.profile {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+	}
+
+	.card__profile {
+		display: flex;
+
+	}
+
+	.post_info {
+		margin-left: .5rem;
+		display: flex;
+		flex-direction: column;
+
+	}
+
+	.post_info span:nth-child(2) {
+		font-size: 12px;
+		margin-top: 0px;
+	}
+
+	.upload_image {
+		display: none;
+	}
+
+	#image {
+		width: 100px;
+		height: 100px;
+	}
+	#exampleFormControlInput1{
+		border-radius: 30px;
+	}
+</style>
+
+<body>
+	<!-- NAVIGATION BAR -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-primary sticky-top">
+		<div class="container-fluid">
+			<a class="navbar-brand text-light fw-bold" href="#">FACEBOOK</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+				aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- SEARCH BAR SECTION -->
+
+			<div class="collapse navbar-collapse" id="navbarScroll">
+				<form class="d-flex mr-auto">
+					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-light" type="submit">Search</button>
+				</form>
+				<ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll mr-auto"
+					style="--bs-scroll-height: 100px;">
+					<li class="nav-item">
+						<a class="nav-link btn-btn-primary text-light active" aria-current="page" href="#"> <i
+								class="fa fa-home" aria-hidden="true"></i> Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link btn-btn-primary text-light active" data-bs-toggle="modal"
+							data-bs-target="#exampleModal" href="#"> <i class="fa fa-plus" aria-hidden="true"></i>
+							Post</a>
+					</li>
+
+				</ul>
+				{% if request.user.is_authenticated %}
+				<div class="dropdown">
+					<img class="profile" src="{{request.user.profile.pic.url}}" alt="">
+
+					<a class=" dropdown-toggle text-light" href="#" role="button" id="dropdownMenuLink"
+						data-bs-toggle="dropdown" aria-expanded="false">
+						Welcome ! {{request.user.username}}
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+						<li><a class="dropdown-item" href="#">Profile</a></li>
+						<li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+
+					</ul>
+				</div>
+
+				{% endif %}
+			</div>
+		</div>
+	</nav>
+
+
+	<!-- POST SECTION -->
+	<div class="container-fluid blog__container position-fixed">
+		<!-- SIDE BAR -->
+		<div class="sidebar col-3 mx-0 d-md-block d-none my-1">
+			
+			<div class="card my-1">
+				<div class="card-body d-flex my-auto">
+					<img src={{request.user.profile.pic.url}} class="profile mx-1" alt="">
+				  <span class="my-auto">{{request.user.first_name}} {{request.user.last_name}}</span>
+				</div>
+			  </div>
+			  
+			  <div class="card my-1">
+				<div class="card-body d-flex my-auto">
+					<i class="fa fa-info fs-1 text-primary " aria-hidden="true"></i>
+				  <span class="my-auto mx-1">Covid-19 Information</span>
+				</div>
+			  </div>
+
+			
+		</div>
+
+		<!-- POST SECTION -->
+		<div class="post_section col-md-6 mx-0  col-sm-12">
+			<div class="container col-md-12  stories_container border my-2">
+				<nav>
+					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+						<button class="nav-link active p-3 mr-3" id="nav-home-tab" data-bs-toggle="tab"
+							data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+							aria-selected="true">Stories</button>
+						<button class="nav-link p-3" id="nav-profile-tab" data-bs-toggle="tab"
+							data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+							aria-selected="false">Rooms</button>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active d-flex" id="nav-home" role="tabpanel"
+						aria-labelledby="nav-home-tab">
+						<div class="card shadow story_card m-1">
+							<img src="{% static 'img/avatar1.jpg' %}" alt="">
+							<div class="add_icon bg-primary">
+								<i class="fa fa-plus" aria-hidden="true"></i>
+							</div>
+						</div>
+						<div class="card shadow story_card m-1">
+							<img src="{% static 'img/me-about.jpg' %}" alt="">
+							<div class="image_round">
+								<img src="{% static 'img/avatar2.jpg' %}" alt="">
+							</div>
+						</div>
+
+					</div>
+					<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...
+					</div>
+				</div>
+			</div>
+
+
+			<!-- ALL POST HERE -->
+			{% for x in post %}
+			<div class="card container-fluid my-3">
+				<div class="card-body card__profile">
+					<!-- PROFILE PICTURE -->
+					{% for data  in profile %}
+						{% if data.user.username == x.user.username %}
+						<img class="profile card-img-top img-fluid profile" src="{{data.pic.url}}" alt="">
+						{% endif %}
+						
+						{% endfor %}
+					<div class="post_info">
+						<span class="card-title">{{x.user.first_name}} {{x.user.last_name}}</span>
+						<span class="card-title mx-1">{{x.date}}</span>
+						
+					</div>
+<!-- Hussein -->
+				</div>
+				<!-- POST TEXT HERE -->
+				<div class="container-fluid my-2">
+					<span>
+						{{x.post}}
+					</span>
+				</div>
+				<!-- POST  IMAGE -->
+				<img src="{{x.image.url}}" class="card-img-top img-fluid" alt="...">
+				<div class="container-fluid d-flex col-12 my-2 justify-content-between">
+					<button class="btn btn-secondary btn-sm"><i class="fa fa-thumbs-up" aria-hidden="true"></i> Like
+					</button>
+					<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#id{{x.id}}" aria-expanded="false" aria-controls="collapseExample" id="comment">
+						Comments
+					  </button>
+				</div>
+				{% for comment in comments %}
+				{% if comment.post.post == x.post %}
+				
+				<div class="collapse" id="id{{x.id}}">
+					<div class="card card-body d-flex">
+						{% for data  in profile %}
+						{% if data.user.username == x.user.username %}
+						<div class="container d-flex">
+							<img class="profile card-img-top img-fluid profile" src="{{data.pic.url}}" alt="">
+							<span>{{comment.user.username}}</span>
+
+						</div>
+						{% endif %}
+						
+						{% endfor %}
+						<span>{{comment.comment}}</span>
+					</div>
+				  </div>
+				{% endif %}
+				
+				{% endfor %}
+				<div class="mb-3">
+					<input type="text" class="form-control" id="exampleFormControlInput1"
+						placeholder="write a public comment.........">
+				</div>
+
+			</div>
+			{% endfor %}
+		</div>
+
+		<!-- FIND ALL FRIENDS -->
+		<div class="freinds_container col-3 d-md-block d-none">
+			<div class="card mb-3 my-1" style="max-width: 300px;">
+				<div class="row g-0">
+					<div class="col-md-4">
+						<img src="{% static 'img/avatar1.jpg' %}" class="img-fluid rounded-start" alt="...">
+					</div>
+					<div class="col-md-8">
+						<div class="card-body">
+							<h5 class="card-title">Card title</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card mb-3 my-1" style="max-width: 300px;">
+				<div class="row g-0">
+					<div class="col-md-4">
+						<img src="{% static 'img/avatar1.jpg' %}" class="img-fluid rounded-start" alt="...">
+					</div>
+					<div class="col-md-8">
+						<div class="card-body">
+							<h5 class="card-title">Card title</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+
+	<!-- POST MODEL -->
+
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Update Post</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form action="" method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="modal-body">
+						<div class="mb-3 border">
+							<textarea placeholder="Enter post here" class="form-control"
+								id="exampleFormControlTextarea1" rows="3" required name='post'></textarea>
+						</div>
+						<div class="upload_image">
+							<input type="file" name="img" id="file">
+						</div>
+					</div>
+					<img id="image" src="" alt="" class="mx-3">
+					<div class="container d-flex my-3">
+						<i id="btn_image" style="cursor: pointer; font-size:20px;" class="fa fa-image"
+							aria-hidden="true"></i>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Post</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+
+</html>
